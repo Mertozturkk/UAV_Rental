@@ -13,7 +13,7 @@ class OrderListTestCase(TestCase):
         """
         self.client = Client()
         self.user = User.objects.create_user(username='testuser', password='testpass')
-        self.uav_dealer = uavDealer.objects.create(car_dealer=self.user, name='Test Dealer', wallet=500)
+        self.uav_dealer = uavDealer.objects.create(uav_dealer=self.user, name='Test Dealer', wallet=500)
         self.order1 = Orders.objects.create(uav_dealer=self.uav_dealer, is_complete=True)
         self.order2 = Orders.objects.create(uav_dealer=self.uav_dealer, is_complete=False)
         self.order3 = Orders.objects.create(uav_dealer=self.uav_dealer, is_complete=False)

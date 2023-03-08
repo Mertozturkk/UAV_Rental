@@ -77,7 +77,7 @@ def registration(request):
 
 @login_required
 def add_vehicle(request):
-    car_name = request.POST['uav_name']
+    uav_name = request.POST['uav_name']
     color = request.POST['color']
     cd = uavDealer.objects.get(uav_dealer=request.user)
     city = request.POST['city']
@@ -90,22 +90,22 @@ def add_vehicle(request):
     except:
         area = None
     if area is not None:
-        car = Vehicles(car_name=car_name, color=color, dealer=cd, area = area, description = description, capacity=capacity)
+        uav = Vehicles(uav_name=uav_name, color=color, dealer=cd, area = area, description = description, capacity=capacity)
     else:
         area = Area(city = city, pincode = pincode)
         area.save()
         area = Area.objects.get(city = city, pincode = pincode)
-        car = Vehicles(car_name=car_name, color=color, dealer=cd, area = area,description=description, capacity=capacity)
-    car.save()
+        uav = Vehicles(uav_name=uav_name, color=color, dealer=cd, area = area,description=description, capacity=capacity)
+    uav.save()
     return render(request, 'uav_dealer_vehicle_added.html')
 
 @login_required
 def manage_vehicles(request):
     username = request.user
     user = User.objects.get(username = username)
-    car_dealer = uavDealer.objects.get(car_dealer = user)
+    uav_dealer = uavDealer.objects.get(uav_dealer = user)
     vehicle_list = []
-    vehicles = Vehicles.objects.filter(dealer = car_dealer)
+    vehicles = Vehicles.objects.filter(dealer = uav_dealer)
     for v in vehicles:
         vehicle_list.append(v)
     return render(request, 'uav_dealer_manage.html', {'vehicle_list':vehicle_list})
@@ -114,8 +114,8 @@ def manage_vehicles(request):
 def order_list(request):
     username = request.user
     user = User.objects.get(username = username)
-    car_dealer = uavDealer.objects.get(car_dealer = user)
-    orders = Orders.objects.filter(car_dealer = car_dealer)
+    uav_dealer = uavDealer.objects.get(uav_dealer = user)
+    orders = Orders.objects.filter(car_dealer = uav_dealer)
     order_list = []
     for o in orders:
         if o.is_complete == False:
@@ -131,14 +131,14 @@ def complete(request):
     order.save()
     vehicle.is_available = True
     vehicle.save()
-    return HttpResponseRedirect('/car_dealer_portal/order_list/')
+    return HttpResponseRedirect('/uav_dealer_dashboard/order_list/')
 
 
 @login_required
 def history(request):
     user = User.objects.get(username = request.user)
-    car_dealer = uavDealer.objects.get(uav_dealer = user)
-    orders = Orders.objects.filter(uav_dealer = car_dealer)
+    uav_dealer = uavDealer.objects.get(uav_dealer = user)
+    orders = Orders.objects.filter(uav_dealer = uav_dealer)
     order_list = []
     for o in orders:
         order_list.append(o)
